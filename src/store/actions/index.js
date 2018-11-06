@@ -1,2 +1,2 @@
 export { fetchGarbage, fetchTreasure } from "./thingActions";
-export { login } from "./authActions";
+export { login, logout } from "./authActions";
