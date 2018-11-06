@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+
+// Actions
+import * as actionCreators from "./store/actions";
 
 // Components
 import PrivateRoute from "./PrivateRoute";
@@ -10,6 +14,10 @@ import Garbage from "./Garbage";
 import Treasure from "./Treasure";
 
 class App extends Component {
+  componentDidMount() {
+    this.props.checkToken();
+  }
+
   render() {
     return (
       <div>
@@ -28,4 +36,11 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  checkToken: () => dispatch(actionCreators.checkForExpiredToken())
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);

@@ -4,7 +4,32 @@ import jwt_decode from "jwt-decode";
 import * as actionTypes from "./actionTypes";
 
 const setAuthToken = token => {
+  localStorage.setItem("token", token);
   axios.defaults.headers.common.Authorization = `jwt ${token}`;
+};
+
+export const checkForExpiredToken = () => {
+  return dispatch => {
+    // Get token
+    const token = localStorage.token;
+
+    if (token) {
+      const currentTime = Date.now() / 1000;
+
+      // Decode token and get user info
+      const user = jwt_decode(token);
+
+      // Check token expiration
+      if (user.exp >= currentTime) {
+        // Set auth token header
+        setAuthToken(token);
+        // Set user
+        dispatch(setCurrentUser(user));
+      } else {
+        dispatch(logout());
+      }
+    }
+  };
 };
 
 export const login = userData => {
