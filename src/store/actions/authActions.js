@@ -21,6 +21,21 @@ export const login = userData => {
   };
 };
 
+export const signup = (userData, history) => {
+  return dispatch => {
+    axios
+      .post("https://precious-things.herokuapp.com/signup/", userData)
+      .then(res => res.data)
+      .then(user => {
+        const decodedUser = jwt_decode(user.token);
+        setAuthToken(user.token);
+        dispatch(setCurrentUser(decodedUser));
+        history.push("/");
+      })
+      .catch(err => console.error(err.response));
+  };
+};
+
 export const logout = () => setCurrentUser();
 
 const setCurrentUser = user => ({
